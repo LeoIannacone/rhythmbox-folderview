@@ -31,7 +31,7 @@ class FolderView (GObject.Object, Peas.Activatable):
     def do_activate(self):
         shell = self.object
 
-        #group = RB.rb_source_group_get_by_name ("library")
+        group = RB.DisplayPageGroup.get_by_id ("library")
         self.db = shell.get_property("db")
         try:
             self.entry_type = FolderViewEntryType()
@@ -46,10 +46,9 @@ class FolderView (GObject.Object, Peas.Activatable):
                                     name="Folder View",
                                     entry_type=self.entry_type,
                                     plugin=self,
-                                    #source_group=group
                                     )
         #self.source.set_property( "icon", self.get_folder_closed_icon()) 
-        shell.append_display_page(self.source, None)
+        shell.append_display_page(self.source, group)
         shell.register_entry_type_for_source(self.source, self.entry_type)
         
     def do_deactivate(self):

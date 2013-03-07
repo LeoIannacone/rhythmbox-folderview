@@ -5,10 +5,10 @@
 #import Gtk
 #import os
 #import gio
-import urllib
+#import urllib
 #import GConf
 #import rb,rhythmdb
-#import treefilebrowser
+import treefilebrowser
 #import logging,logging.handlers
 
 from gi.repository import GObject, Peas, RB, Gtk, Gio
@@ -25,7 +25,7 @@ class FolderViewSource(RB.BrowserSource):
         self.shell = None
         
         library = Gio.Settings("org.gnome.rhythmbox.rhythmdb")
-        library_location = library['locations'][0]
+        self.library_location = library['locations'][0]
 
     def do_impl_activate(self):
         #log.info('Activate')
@@ -34,7 +34,7 @@ class FolderViewSource(RB.BrowserSource):
             self.db         = self.shell.get_property('db')
             self.entry_type = self.get_property('entry-type')
             self.entry_view = self.get_entry_view()
-            self.filebrowser.set_active_dir(GConf.client_get_default().get_without_default(LAST_PATH_KEY).get_string())
+            #self.filebrowser.set_active_dir(GConf.client_get_default().get_without_default(LAST_PATH_KEY).get_string())
 
         ui_browse=self.shell.get_ui_manager().get_widget('/ToolBar/Browse')
         #ui_browse.set_sensitive(False)
@@ -64,7 +64,7 @@ class FolderViewSource(RB.BrowserSource):
         self.query = self.db.query_new()
         song_type = self.db.entry_type_get_by_name('song')
         path = self.filebrowser.get_selected()
-        GConf.client_get_default().set_string(LAST_PATH_KEY,path)
+        #GConf.client_get_default().set_string(LAST_PATH_KEY,path)
         #for item in os.listdir(path):
         #    filename = os.path.join(path, item)
         #    if os.path.isfile(filename):
@@ -92,7 +92,7 @@ class FolderViewSource(RB.BrowserSource):
         
 
 def path_to_uri(path):
-    gfile = gio.File(path)
+    gfile = Gio.File(path)
     return gfile.get_uri()
 
-#GObject.type_register(FolderViewSource)
+GObject.type_register(FolderViewSource)
